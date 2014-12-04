@@ -1,0 +1,84 @@
+\hypertarget{parser_8h}{\section{/\-Users/clementlinares/\-Desktop/\-Pricer2014/src/parser.h File Reference}
+\label{parser_8h}\index{/\-Users/clementlinares/\-Desktop/\-Pricer2014/src/parser.\-h@{/\-Users/clementlinares/\-Desktop/\-Pricer2014/src/parser.\-h}}
+}
+{\ttfamily \#include $<$map$>$}\\*
+{\ttfamily \#include $<$boost/variant.\-hpp$>$}\\*
+{\ttfamily \#include $<$cstring$>$}\\*
+{\ttfamily \#include \char`\"{}pnl/pnl\-\_\-matrix.\-h\char`\"{}}\\*
+Include dependency graph for parser.\-h\-:
+This graph shows which files directly or indirectly include this file\-:
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structltstr}{ltstr}
+\begin{DoxyCompactList}\small\item\em Comparison structure. \end{DoxyCompactList}\item 
+struct \hyperlink{structTypeVal}{Type\-Val}
+\begin{DoxyCompactList}\small\item\em Value holding structure. \end{DoxyCompactList}\item 
+class \hyperlink{classParam}{Param}
+\item 
+class \hyperlink{classParser}{Parser}
+\begin{DoxyCompactList}\small\item\em A parser class based on \hyperlink{classParam}{Param} It parses files with the syntax key $<$type$>$ value where key can contain several words type can be int, float, string, vector. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{parser_8h_a3bcbc3ff314d166a1887c5a4ea3e2d1b}{M\-A\-X\-\_\-\-C\-H\-A\-R\-\_\-\-L\-I\-N\-E}~1024
+\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef std\-::map$<$ char \\*
+$\ast$, \hyperlink{structTypeVal}{Type\-Val}, \hyperlink{structltstr}{ltstr} $>$ \hyperlink{parser_8h_a806666463865555a5d7aba1d6b0b9674}{Hash}
+\begin{DoxyCompactList}\small\item\em A map holding pairs (key, value) \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \hyperlink{parser_8h_a90856b8fb3f1a65845ffec1ec2884c0f}{T\-\_\-type} \{ \\*
+\hyperlink{parser_8h_a90856b8fb3f1a65845ffec1ec2884c0fa26c5769a44ea25ffe1407c6a0bfdb862}{T\-\_\-\-N\-U\-L\-L}, 
+\hyperlink{parser_8h_a90856b8fb3f1a65845ffec1ec2884c0faa30cbb0eb56b7263a35f9d6643e12c83}{T\-\_\-\-I\-N\-T}, 
+\hyperlink{parser_8h_a90856b8fb3f1a65845ffec1ec2884c0fa875b555dccbb4f76c01f6d3b64cb23be}{T\-\_\-\-D\-O\-U\-B\-L\-E}, 
+\hyperlink{parser_8h_a90856b8fb3f1a65845ffec1ec2884c0fa8e42b79fe4e4f438f8085528895cca69}{T\-\_\-\-V\-E\-C\-T\-O\-R}, 
+\\*
+\hyperlink{parser_8h_a90856b8fb3f1a65845ffec1ec2884c0fa2b93aac4bda1ecc9cd242c671411c323}{T\-\_\-\-S\-T\-R\-I\-N\-G}
+ \}
+\begin{DoxyCompactList}\small\item\em List of possible types. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\hypertarget{parser_8h_a3bcbc3ff314d166a1887c5a4ea3e2d1b}{\index{parser.\-h@{parser.\-h}!M\-A\-X\-\_\-\-C\-H\-A\-R\-\_\-\-L\-I\-N\-E@{M\-A\-X\-\_\-\-C\-H\-A\-R\-\_\-\-L\-I\-N\-E}}
+\index{M\-A\-X\-\_\-\-C\-H\-A\-R\-\_\-\-L\-I\-N\-E@{M\-A\-X\-\_\-\-C\-H\-A\-R\-\_\-\-L\-I\-N\-E}!parser.h@{parser.\-h}}
+\subsubsection[{M\-A\-X\-\_\-\-C\-H\-A\-R\-\_\-\-L\-I\-N\-E}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X\-\_\-\-C\-H\-A\-R\-\_\-\-L\-I\-N\-E~1024}}\label{parser_8h_a3bcbc3ff314d166a1887c5a4ea3e2d1b}
+
+
+\subsection{Typedef Documentation}
+\hypertarget{parser_8h_a806666463865555a5d7aba1d6b0b9674}{\index{parser.\-h@{parser.\-h}!Hash@{Hash}}
+\index{Hash@{Hash}!parser.h@{parser.\-h}}
+\subsubsection[{Hash}]{\setlength{\rightskip}{0pt plus 5cm}typedef std\-::map$<$char $\ast$, {\bf Type\-Val}, {\bf ltstr}$>$ {\bf Hash}}}\label{parser_8h_a806666463865555a5d7aba1d6b0b9674}
+
+
+A map holding pairs (key, value) 
+
+
+
+\subsection{Enumeration Type Documentation}
+\hypertarget{parser_8h_a90856b8fb3f1a65845ffec1ec2884c0f}{\index{parser.\-h@{parser.\-h}!T\-\_\-type@{T\-\_\-type}}
+\index{T\-\_\-type@{T\-\_\-type}!parser.h@{parser.\-h}}
+\subsubsection[{T\-\_\-type}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf T\-\_\-type}}}\label{parser_8h_a90856b8fb3f1a65845ffec1ec2884c0f}
+
+
+List of possible types. 
+
+\begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{T\-\_\-\-N\-U\-L\-L@{T\-\_\-\-N\-U\-L\-L}!parser.\-h@{parser.\-h}}\index{parser.\-h@{parser.\-h}!T\-\_\-\-N\-U\-L\-L@{T\-\_\-\-N\-U\-L\-L}}\item[{\em 
+\hypertarget{parser_8h_a90856b8fb3f1a65845ffec1ec2884c0fa26c5769a44ea25ffe1407c6a0bfdb862}{T\-\_\-\-N\-U\-L\-L}\label{parser_8h_a90856b8fb3f1a65845ffec1ec2884c0fa26c5769a44ea25ffe1407c6a0bfdb862}
+}]\index{T\-\_\-\-I\-N\-T@{T\-\_\-\-I\-N\-T}!parser.\-h@{parser.\-h}}\index{parser.\-h@{parser.\-h}!T\-\_\-\-I\-N\-T@{T\-\_\-\-I\-N\-T}}\item[{\em 
+\hypertarget{parser_8h_a90856b8fb3f1a65845ffec1ec2884c0faa30cbb0eb56b7263a35f9d6643e12c83}{T\-\_\-\-I\-N\-T}\label{parser_8h_a90856b8fb3f1a65845ffec1ec2884c0faa30cbb0eb56b7263a35f9d6643e12c83}
+}]\index{T\-\_\-\-D\-O\-U\-B\-L\-E@{T\-\_\-\-D\-O\-U\-B\-L\-E}!parser.\-h@{parser.\-h}}\index{parser.\-h@{parser.\-h}!T\-\_\-\-D\-O\-U\-B\-L\-E@{T\-\_\-\-D\-O\-U\-B\-L\-E}}\item[{\em 
+\hypertarget{parser_8h_a90856b8fb3f1a65845ffec1ec2884c0fa875b555dccbb4f76c01f6d3b64cb23be}{T\-\_\-\-D\-O\-U\-B\-L\-E}\label{parser_8h_a90856b8fb3f1a65845ffec1ec2884c0fa875b555dccbb4f76c01f6d3b64cb23be}
+}]\index{T\-\_\-\-V\-E\-C\-T\-O\-R@{T\-\_\-\-V\-E\-C\-T\-O\-R}!parser.\-h@{parser.\-h}}\index{parser.\-h@{parser.\-h}!T\-\_\-\-V\-E\-C\-T\-O\-R@{T\-\_\-\-V\-E\-C\-T\-O\-R}}\item[{\em 
+\hypertarget{parser_8h_a90856b8fb3f1a65845ffec1ec2884c0fa8e42b79fe4e4f438f8085528895cca69}{T\-\_\-\-V\-E\-C\-T\-O\-R}\label{parser_8h_a90856b8fb3f1a65845ffec1ec2884c0fa8e42b79fe4e4f438f8085528895cca69}
+}]\index{T\-\_\-\-S\-T\-R\-I\-N\-G@{T\-\_\-\-S\-T\-R\-I\-N\-G}!parser.\-h@{parser.\-h}}\index{parser.\-h@{parser.\-h}!T\-\_\-\-S\-T\-R\-I\-N\-G@{T\-\_\-\-S\-T\-R\-I\-N\-G}}\item[{\em 
+\hypertarget{parser_8h_a90856b8fb3f1a65845ffec1ec2884c0fa2b93aac4bda1ecc9cd242c671411c323}{T\-\_\-\-S\-T\-R\-I\-N\-G}\label{parser_8h_a90856b8fb3f1a65845ffec1ec2884c0fa2b93aac4bda1ecc9cd242c671411c323}
+}]\end{description}
+\end{Desc}

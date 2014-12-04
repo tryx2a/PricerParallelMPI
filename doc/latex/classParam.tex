@@ -1,0 +1,134 @@
+\hypertarget{classParam}{\section{Param Class Reference}
+\label{classParam}\index{Param@{Param}}
+}
+
+
+{\ttfamily \#include $<$parser.\-h$>$}
+
+
+
+Inheritance diagram for Param\-:
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classParam_ae0eeef2ab32df12ccc4e9d2174d6e91a}{Param} ()
+\item 
+{\footnotesize template$<$typename T $>$ }\\bool \hyperlink{classParam_a1f1439c7fa41f2e5a291faa309f5faac}{extract} (const char $\ast$key, T \&out) const 
+\begin{DoxyCompactList}\small\item\em Extract the value associated to a key and store it into T. \end{DoxyCompactList}\item 
+bool \hyperlink{classParam_a1991bb62b5226ff19e4cb02359577c72}{extract} (const char $\ast$key, Pnl\-Vect $\ast$\&out, int size) const 
+\begin{DoxyCompactList}\small\item\em Specialised version of the previous function for Pnl\-Vect. \end{DoxyCompactList}\item 
+\hyperlink{classParam_a63814ed15af3910f8899dbd6853a7e05}{$\sim$\-Param} ()
+\item 
+void \hyperlink{classParam_a05fdfe029c450d1607e64cda216ed7ac}{print} () const 
+\end{DoxyCompactItemize}
+\subsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{parser_8h_a806666463865555a5d7aba1d6b0b9674}{Hash} \hyperlink{classParam_ab671c1688f5247604d23ed990c90fd36}{M}
+\end{DoxyCompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classParam_ae0eeef2ab32df12ccc4e9d2174d6e91a}{\index{Param@{Param}!Param@{Param}}
+\index{Param@{Param}!Param@{Param}}
+\subsubsection[{Param}]{\setlength{\rightskip}{0pt plus 5cm}Param\-::\-Param (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classParam_ae0eeef2ab32df12ccc4e9d2174d6e91a}
+\hypertarget{classParam_a63814ed15af3910f8899dbd6853a7e05}{\index{Param@{Param}!$\sim$\-Param@{$\sim$\-Param}}
+\index{$\sim$\-Param@{$\sim$\-Param}!Param@{Param}}
+\subsubsection[{$\sim$\-Param}]{\setlength{\rightskip}{0pt plus 5cm}Param\-::$\sim$\-Param (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classParam_a63814ed15af3910f8899dbd6853a7e05}
+
+
+References T\-\_\-\-S\-T\-R\-I\-N\-G, and T\-\_\-\-V\-E\-C\-T\-O\-R.
+
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classParam_a1f1439c7fa41f2e5a291faa309f5faac}{\index{Param@{Param}!extract@{extract}}
+\index{extract@{extract}!Param@{Param}}
+\subsubsection[{extract}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T $>$ bool Param\-::extract (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{key, }
+\item[{T \&}]{out}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}}\label{classParam_a1f1439c7fa41f2e5a291faa309f5faac}
+
+
+Extract the value associated to a key and store it into T. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em key} & a string \\
+\hline
+{\em out} & contains the value associated to key on output\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if key was found. False is thekey is not found or the conversion the type of out is not possible. 
+\end{DoxyReturn}
+
+
+Referenced by main().
+
+\hypertarget{classParam_a1991bb62b5226ff19e4cb02359577c72}{\index{Param@{Param}!extract@{extract}}
+\index{extract@{extract}!Param@{Param}}
+\subsubsection[{extract}]{\setlength{\rightskip}{0pt plus 5cm}bool Param\-::extract (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{key, }
+\item[{Pnl\-Vect $\ast$\&}]{out, }
+\item[{int}]{size}
+\end{DoxyParamCaption}
+) const}}\label{classParam_a1991bb62b5226ff19e4cb02359577c72}
+
+
+Specialised version of the previous function for Pnl\-Vect. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em key} & a string \\
+\hline
+{\em out} & contains the value associated to key on output \\
+\hline
+{\em size} & length of the expected vector\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true or false 
+\end{DoxyReturn}
+\hypertarget{classParam_a05fdfe029c450d1607e64cda216ed7ac}{\index{Param@{Param}!print@{print}}
+\index{print@{print}!Param@{Param}}
+\subsubsection[{print}]{\setlength{\rightskip}{0pt plus 5cm}void Param\-::print (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}}\label{classParam_a05fdfe029c450d1607e64cda216ed7ac}
+
+
+References M.
+
+
+
+Referenced by main().
+
+
+
+\subsection{Field Documentation}
+\hypertarget{classParam_ab671c1688f5247604d23ed990c90fd36}{\index{Param@{Param}!M@{M}}
+\index{M@{M}!Param@{Param}}
+\subsubsection[{M}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Hash} Param\-::\-M}}\label{classParam_ab671c1688f5247604d23ed990c90fd36}
+
+
+Referenced by print().
+
+
+
+The documentation for this class was generated from the following files\-:\begin{DoxyCompactItemize}
+\item 
+/\-Users/clementlinares/\-Desktop/\-Pricer2014/src/\hyperlink{parser_8h}{parser.\-h}\item 
+/\-Users/clementlinares/\-Desktop/\-Pricer2014/src/\hyperlink{parser_8cpp}{parser.\-cpp}\end{DoxyCompactItemize}

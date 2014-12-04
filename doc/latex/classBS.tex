@@ -1,0 +1,191 @@
+\hypertarget{classBS}{\section{B\-S Class Reference}
+\label{classBS}\index{B\-S@{B\-S}}
+}
+
+
+Modèle de Black Scholes.  
+
+
+
+
+{\ttfamily \#include $<$bs.\-h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{classBS_a16bb7803bf0af1c45a1743c0829acf75}{asset} (Pnl\-Mat $\ast$path, double T, int N, Pnl\-Rng $\ast$rng)
+\begin{DoxyCompactList}\small\item\em valeurs initiales du sous-\/jacent \end{DoxyCompactList}\item 
+void \hyperlink{classBS_a9992b4f4073f6d586980eba729a987f5}{asset} (Pnl\-Mat $\ast$path, double t, int N, double T, Pnl\-Rng $\ast$rng, const Pnl\-Mat $\ast$past)
+\begin{DoxyCompactList}\small\item\em Calcule une trajectoire du sous-\/jacent connaissant le passé jusqu' à la date t. \end{DoxyCompactList}\item 
+void \hyperlink{classBS_a5c4c13efff4f6aa1b869c86c1377b10b}{delta} (const Pnl\-Mat $\ast$past, double t, Pnl\-Vect $\ast$delta, Pnl\-Vect $\ast$ic)
+\begin{DoxyCompactList}\small\item\em Calcule le delta de l'option à la date t. \end{DoxyCompactList}\item 
+void \hyperlink{classBS_a8e4b7a4de6bb8504e4827d7ac2c6d50d}{shift\-\_\-asset} (Pnl\-Mat $\ast$shift\-\_\-path, const Pnl\-Mat $\ast$path, int d, double h, double t, double timestep)
+\begin{DoxyCompactList}\small\item\em Shift d'une trajectoire du sous-\/jacent. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{classBS_a67ab37b35aaf79bdfa3835724adcc27e}{size\-\_\-}
+\item 
+double \hyperlink{classBS_acd8975f68f61b6a3e65e8f9fbee065b0}{r\-\_\-}
+\begin{DoxyCompactList}\small\item\em nombre d'actifs du modèle \end{DoxyCompactList}\item 
+double \hyperlink{classBS_a1dfd9af0c4f989b9a785c3672cb671a4}{rho\-\_\-}
+\begin{DoxyCompactList}\small\item\em taux d'intérêt \end{DoxyCompactList}\item 
+Pnl\-Vect $\ast$ \hyperlink{classBS_af876e5a72ff5056dfcbc98df76a19350}{sigma\-\_\-}
+\begin{DoxyCompactList}\small\item\em paramètre de corrélation \end{DoxyCompactList}\item 
+Pnl\-Vect $\ast$ \hyperlink{classBS_a707031b6b0cd53a0a24c1d39956efea3}{spot\-\_\-}
+\begin{DoxyCompactList}\small\item\em vecteur de volatilités \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Modèle de Black Scholes. 
+
+\subsection{Member Function Documentation}
+\hypertarget{classBS_a16bb7803bf0af1c45a1743c0829acf75}{\index{B\-S@{B\-S}!asset@{asset}}
+\index{asset@{asset}!BS@{B\-S}}
+\subsubsection[{asset}]{\setlength{\rightskip}{0pt plus 5cm}void B\-S\-::asset (
+\begin{DoxyParamCaption}
+\item[{Pnl\-Mat $\ast$}]{path, }
+\item[{double}]{T, }
+\item[{int}]{N, }
+\item[{Pnl\-Rng $\ast$}]{rng}
+\end{DoxyParamCaption}
+)}}\label{classBS_a16bb7803bf0af1c45a1743c0829acf75}
+
+
+valeurs initiales du sous-\/jacent 
+
+Génère une trajectoire du modèle et la stocke dans path
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt out}  & {\em path} & contient une trajectoire du modèle. C'est une matrice de taille d x (N+1) \\
+\hline
+\mbox{\tt in}  & {\em T} & maturité \\
+\hline
+\mbox{\tt in}  & {\em N} & nombre de dates de constatation \\
+\hline
+\end{DoxyParams}
+\hypertarget{classBS_a9992b4f4073f6d586980eba729a987f5}{\index{B\-S@{B\-S}!asset@{asset}}
+\index{asset@{asset}!BS@{B\-S}}
+\subsubsection[{asset}]{\setlength{\rightskip}{0pt plus 5cm}void B\-S\-::asset (
+\begin{DoxyParamCaption}
+\item[{Pnl\-Mat $\ast$}]{path, }
+\item[{double}]{t, }
+\item[{int}]{N, }
+\item[{double}]{T, }
+\item[{Pnl\-Rng $\ast$}]{rng, }
+\item[{const Pnl\-Mat $\ast$}]{past}
+\end{DoxyParamCaption}
+)}}\label{classBS_a9992b4f4073f6d586980eba729a987f5}
+
+
+Calcule une trajectoire du sous-\/jacent connaissant le passé jusqu' à la date t. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt out}  & {\em path} & contient une trajectoire du sous-\/jacent donnée jusqu'à l'instant t par la matrice past \\
+\hline
+\mbox{\tt in}  & {\em t} & date jusqu'à laquelle on connait la trajectoire t n'est pas forcément une date de discrétisation \\
+\hline
+\mbox{\tt in}  & {\em N} & nombre de pas de constatation \\
+\hline
+\mbox{\tt in}  & {\em T} & date jusqu'à laquelle on simule la trajectoire \\
+\hline
+\mbox{\tt in}  & {\em past} & trajectoire réalisée jusqu'a la date t \\
+\hline
+\end{DoxyParams}
+\hypertarget{classBS_a5c4c13efff4f6aa1b869c86c1377b10b}{\index{B\-S@{B\-S}!delta@{delta}}
+\index{delta@{delta}!BS@{B\-S}}
+\subsubsection[{delta}]{\setlength{\rightskip}{0pt plus 5cm}void B\-S\-::delta (
+\begin{DoxyParamCaption}
+\item[{const Pnl\-Mat $\ast$}]{past, }
+\item[{double}]{t, }
+\item[{Pnl\-Vect $\ast$}]{delta, }
+\item[{Pnl\-Vect $\ast$}]{ic}
+\end{DoxyParamCaption}
+)}}\label{classBS_a5c4c13efff4f6aa1b869c86c1377b10b}
+
+
+Calcule le delta de l'option à la date t. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em past} & contient la trajectoire du sous-\/jacent jusqu'à l'instant t \\
+\hline
+\mbox{\tt in}  & {\em t} & date à laquelle le calcul est fait \\
+\hline
+\mbox{\tt out}  & {\em delta} & contient le vecteur de delta \\
+\hline
+\mbox{\tt out}  & {\em ic} & contient la largeur de l'intervalle de confiance sur le calcul du delta \\
+\hline
+\end{DoxyParams}
+\hypertarget{classBS_a8e4b7a4de6bb8504e4827d7ac2c6d50d}{\index{B\-S@{B\-S}!shift\-\_\-asset@{shift\-\_\-asset}}
+\index{shift\-\_\-asset@{shift\-\_\-asset}!BS@{B\-S}}
+\subsubsection[{shift\-\_\-asset}]{\setlength{\rightskip}{0pt plus 5cm}void B\-S\-::shift\-\_\-asset (
+\begin{DoxyParamCaption}
+\item[{Pnl\-Mat $\ast$}]{shift\-\_\-path, }
+\item[{const Pnl\-Mat $\ast$}]{path, }
+\item[{int}]{d, }
+\item[{double}]{h, }
+\item[{double}]{t, }
+\item[{double}]{timestep}
+\end{DoxyParamCaption}
+)}}\label{classBS_a8e4b7a4de6bb8504e4827d7ac2c6d50d}
+
+
+Shift d'une trajectoire du sous-\/jacent. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em path} & contient en input la trajectoire du sous-\/jacent \\
+\hline
+\mbox{\tt out}  & {\em shift\-\_\-path} & contient la trajectoire path dont la composante d a été shiftée par (1+h) à partir de la date t. \\
+\hline
+\mbox{\tt in}  & {\em t} & date à partir de laquelle on shift \\
+\hline
+\mbox{\tt in}  & {\em h} & pas de différences finies \\
+\hline
+\mbox{\tt in}  & {\em d} & indice du sous-\/jacent à shifter \\
+\hline
+\mbox{\tt in}  & {\em timestep} & pas de constatation du sous-\/jacent \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Field Documentation}
+\hypertarget{classBS_acd8975f68f61b6a3e65e8f9fbee065b0}{\index{B\-S@{B\-S}!r\-\_\-@{r\-\_\-}}
+\index{r\-\_\-@{r\-\_\-}!BS@{B\-S}}
+\subsubsection[{r\-\_\-}]{\setlength{\rightskip}{0pt plus 5cm}double B\-S\-::r\-\_\-}}\label{classBS_acd8975f68f61b6a3e65e8f9fbee065b0}
+
+
+nombre d'actifs du modèle 
+
+\hypertarget{classBS_a1dfd9af0c4f989b9a785c3672cb671a4}{\index{B\-S@{B\-S}!rho\-\_\-@{rho\-\_\-}}
+\index{rho\-\_\-@{rho\-\_\-}!BS@{B\-S}}
+\subsubsection[{rho\-\_\-}]{\setlength{\rightskip}{0pt plus 5cm}double B\-S\-::rho\-\_\-}}\label{classBS_a1dfd9af0c4f989b9a785c3672cb671a4}
+
+
+taux d'intérêt 
+
+\hypertarget{classBS_af876e5a72ff5056dfcbc98df76a19350}{\index{B\-S@{B\-S}!sigma\-\_\-@{sigma\-\_\-}}
+\index{sigma\-\_\-@{sigma\-\_\-}!BS@{B\-S}}
+\subsubsection[{sigma\-\_\-}]{\setlength{\rightskip}{0pt plus 5cm}Pnl\-Vect$\ast$ B\-S\-::sigma\-\_\-}}\label{classBS_af876e5a72ff5056dfcbc98df76a19350}
+
+
+paramètre de corrélation 
+
+\hypertarget{classBS_a67ab37b35aaf79bdfa3835724adcc27e}{\index{B\-S@{B\-S}!size\-\_\-@{size\-\_\-}}
+\index{size\-\_\-@{size\-\_\-}!BS@{B\-S}}
+\subsubsection[{size\-\_\-}]{\setlength{\rightskip}{0pt plus 5cm}int B\-S\-::size\-\_\-}}\label{classBS_a67ab37b35aaf79bdfa3835724adcc27e}
+\hypertarget{classBS_a707031b6b0cd53a0a24c1d39956efea3}{\index{B\-S@{B\-S}!spot\-\_\-@{spot\-\_\-}}
+\index{spot\-\_\-@{spot\-\_\-}!BS@{B\-S}}
+\subsubsection[{spot\-\_\-}]{\setlength{\rightskip}{0pt plus 5cm}Pnl\-Vect$\ast$ B\-S\-::spot\-\_\-}}\label{classBS_a707031b6b0cd53a0a24c1d39956efea3}
+
+
+vecteur de volatilités 
+
+
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+/\-Users/clementlinares/\-Desktop/\-Pricer2014/src/\hyperlink{bs_8h}{bs.\-h}\end{DoxyCompactItemize}
