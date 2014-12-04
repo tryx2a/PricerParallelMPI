@@ -18,9 +18,28 @@
 namespace utils {
 	double computePayoff(const PnlMat *path, const PnlVect *payoffCoeff_, int TimeSteps_, double strike);	
 
+	/*
+	 * Méthodes permettant de packer
+	 */
+	int bs_mpi_pack_size(int* bufsize, int* count, int* pos, MPI_Comm comm, BS* mod_);
+  int bs_mpi_pack(void **buf, int* bufsize, int* count, int* pos, MPI_Comm comm, BS* mod_);
+
+  int opt_mpi_pack_size(int* bufsize, int* count, int* pos,MPI_Comm comm, Option* opt_);
+  int opt_mpi_pack(void **buf, int* bufsize, int* count, int* pos,MPI_Comm comm, Option *opt_);
+
+  int mc_mpi_pack_size(int* bufsize, int* count, int* pos,MPI_Comm comm);
+  int mc_mpi_pack(void **buf, int* bufsize, int* count, int* pos,MPI_Comm comm, MonteCarlo *mc);
+
+
+  /*
+	 * Méthodes permettant de unpacker
+	 */
 	BS* bs_mpi_unpack(void **buf, int* bufsize, int* count, int* pos, MPI_Comm comm);
+
 	Option* opt_mpi_unpack(void **buf, int* bufsize, int* count, int* pos, MPI_Comm comm);
+
 	MonteCarlo* mc_mpi_unpack(void **buf, int* bufsize, int* count, int* pos, MPI_Comm comm,BS* bs, Option* op, int rank);
+
 } // utils
 
 

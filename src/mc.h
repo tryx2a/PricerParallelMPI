@@ -79,19 +79,6 @@ public:
   static Option* createOption(Param *P);
 
   static Option* createOptionByID(int id);
-
-
-  int bs_mpi_pack_size(int* bufsize, int* count, int* pos, MPI_Comm comm);
-  int bs_mpi_pack(void **buf, int* bufsize, int* count, int* pos, MPI_Comm comm);
-  // int bs_mpi_unpack(void **buf, int* bufsize, int* count, int* pos, MPI_Comm comm);
-
-  int opt_mpi_pack_size(int* bufsize, int* count, int* pos,MPI_Comm comm);
-  int opt_mpi_pack(void **buf, int* bufsize, int* count, int* pos,MPI_Comm comm);
-  // int opt_mpi_unpack(void **buf, int* bufsize, int* count, int* pos, MPI_Comm comm);
-
-  int mc_mpi_pack_size(int* bufsize, int* count, int* pos,MPI_Comm comm);
-  int mc_mpi_pack(void **buf, int* bufsize, int* count, int* pos,MPI_Comm comm);
-  // int mc_mpi_unpack(void **buf, int* bufsize, int* count, int* pos, MPI_Comm comm);
   
   void freeRiskInvestedPart(PnlVect *V,double T, double &profitLoss);
 
