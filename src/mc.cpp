@@ -193,7 +193,7 @@ void MonteCarlo::price(double &prix, double &ic){
   double payOffOption=0;
   double mean_payOffSquare=0;
   double tmp;
-  
+
   for(int m=1; m<=this->samples_; m++){
     mod_->asset(path, opt_->T_, opt_->TimeSteps_, this->rng);
     tmp = opt_->payoff(path);

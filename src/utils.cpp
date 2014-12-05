@@ -57,9 +57,11 @@ namespace utils {
     info=MPI_Pack_size(1,MPI_INT, comm,count);
     if (info) return(info);
     *bufsize += *count;   
-    info = pnl_object_mpi_pack_size( PNL_OBJECT(mod_->trend) , comm, count );
-    if (info) return info;
-    *bufsize += *count;
+    /*if(mod_->trend != NULL){  
+      info = pnl_object_mpi_pack_size( PNL_OBJECT(mod_->trend) , comm, count );
+      if (info) return info;
+      *bufsize += *count;
+    }*/
 
     return 0;
   }
@@ -78,8 +80,10 @@ namespace utils {
     if (info) return info;
     info=MPI_Pack(&(mod_->size_),1,MPI_INT,*buf,*bufsize,pos,comm);
     if (info) return info;
-    info = pnl_object_mpi_pack( PNL_OBJECT(mod_->trend), *buf,*bufsize,pos,comm);
-    if(info) return info;
+    /*if(mod_->trend != NULL){
+      info = pnl_object_mpi_pack( PNL_OBJECT(mod_->trend), *buf,*bufsize,pos,comm);
+      if(info) return info;
+    }*/
 
     return 0;
   }
@@ -260,16 +264,16 @@ namespace utils {
     double rho ;
     double r ;
     int sizeBS;
-    PnlVect* trend = pnl_vect_new ();
+    //PnlVect* trend = pnl_vect_new ();
 
     pnl_object_mpi_unpack (PNL_OBJECT(spot), *buf,*bufsize,pos,comm);
     pnl_object_mpi_unpack (PNL_OBJECT(sigma), *buf,*bufsize,pos,comm);
     MPI_Unpack(*buf,*bufsize,pos,&(rho),1,MPI_DOUBLE,comm);
     MPI_Unpack(*buf,*bufsize,pos,&(r),1,MPI_DOUBLE,comm);
     MPI_Unpack(*buf,*bufsize,pos,&(sizeBS),1,MPI_INT,comm);
-    pnl_object_mpi_unpack (PNL_OBJECT(trend), *buf,*bufsize,pos,comm);
+    //pnl_object_mpi_unpack (PNL_OBJECT(trend), *buf,*bufsize,pos,comm);
     
-    BS* bs = new BS(spot,sigma,rho,r,sizeBS,trend);
+    BS* bs = new BS(spot,sigma,rho,r,sizeBS,NULL);
 
     return bs;
   }
@@ -299,8 +303,8 @@ namespace utils {
 
       MPI_Unpack(*buf,*bufsize,pos,&(strike),1,MPI_DOUBLE,comm);
       pnl_object_mpi_unpack (PNL_OBJECT(payoffCoeff), *buf,*bufsize,pos,comm);
-      pnl_object_mpi_unpack (PNL_OBJECT(upperB), *buf,*bufsize,pos,comm);
       pnl_object_mpi_unpack (PNL_OBJECT(lowerB), *buf,*bufsize,pos,comm);
+      pnl_object_mpi_unpack (PNL_OBJECT(upperB), *buf,*bufsize,pos,comm);
 
       return new OptionBarrier(T,Timesteps,sizeOp,strike,payoffCoeff,lowerB, upperB);
     }

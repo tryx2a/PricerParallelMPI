@@ -33,7 +33,7 @@ int main(int argc, char **argv){
 		utils::bs_mpi_pack_size(&bufsize, &count, &pos, MPI_COMM_WORLD, mc->mod_ );
 		utils::opt_mpi_pack_size(&bufsize, &count, &pos, MPI_COMM_WORLD, mc->opt_);
 		utils::mc_mpi_pack_size(&bufsize, &count, &pos,MPI_COMM_WORLD);
-
+		
 		//Instantiation du buffer
 		buf = new char[bufsize];
 
@@ -44,8 +44,6 @@ int main(int argc, char **argv){
 
 		//Envoie du buffer
 		MPI_Send(buf, bufsize, MPI_PACKED, 1, tag, MPI_COMM_WORLD);
-
-
 
 	}else{
 		cout<<"Je suis l esclave"<<endl;
@@ -73,10 +71,17 @@ int main(int argc, char **argv){
 		double prix;
 		double ic;
 
-		mc->price(prix,ic);
 
+		mc->price(prix,ic);
 		cout<<"Prix : "<<prix<<endl;
 		cout<<"Intervalle de confiance :"<<ic<<endl;
+
+
+		cout<<"Creation du delta"<<endl;
+		PnlVect* delta = pnl_vect_create(op->size_);
+		//pnl_vect_print(delta);
+		mc->delta(NULL, 0, delta, NULL);
+		pnl_vect_print(delta);
 
 	}
 
