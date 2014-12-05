@@ -19,6 +19,10 @@ int main(int argc, char **argv){
 	MPI_Comm_size (MPI_COMM_WORLD, &size);
 	MPI_Comm_rank (MPI_COMM_WORLD, &rank);
 
+	double prix = 0;
+	double ic = 0;
+
+	
 	if(rank == 0){
 		cout<<"Je suis le maitre"<<endl;
 		int tag = 12;
@@ -45,13 +49,19 @@ int main(int argc, char **argv){
 		//Envoie du buffer
 		for(int i = 1 ; i <= size ; i++){
 			int voisin =( rank + i )% size;
-			cout<<voisin<<endl;
 			if(voisin != 0){
 				MPI_Send(buf, bufsize, MPI_PACKED, i, tag, MPI_COMM_WORLD);
 			}
 		}
 
-	}else{
+		
+		//mc->price_master(&fluxPrixTotal,&fluxICTotal);
+	
+
+	//}else{
+	}
+
+	if(rank != 0){
 		cout<<"Je suis l esclave : "<<rank<<endl;
 
 		int tag =12;
@@ -74,15 +84,15 @@ int main(int argc, char **argv){
 		Option* op = utils::opt_mpi_unpack(&buf, &bufsize, &count, &pos,MPI_COMM_WORLD);
 		MonteCarlo* mc = utils::mc_mpi_unpack( &buf, &bufsize, &count, &pos,MPI_COMM_WORLD, bs , op , rank) ;
 
-		double prix;
-		double ic;
+		
 
 
 		mc->price(prix,ic);
-		cout<<"Prix : "<<prix<<endl;
-		cout<<"Intervalle de confiance :"<<ic<<endl;
+		cout<<"Prix de l'esclave "<<rank<<" : "<<prix<<endl;
+		cout<<"Intervalle de confiance de l'esclave "<<rank<<" : "<<ic<<endl;
 
-
+		//MPI_Reduce(&prix,&prixGlobal, 1, MPI_FLOAT, MPI_SUM, 0,MPI_COMM_WORLD);
+		
 		/*cout<<"Creation du delta"<<endl;
 		PnlVect* delta = pnl_vect_create(op->size_);
 		//pnl_vect_print(delta);
@@ -90,6 +100,20 @@ int main(int argc, char **argv){
 		pnl_vect_print(delta);*/
 
 	}
+
+	cout<<"Je suis rank "<<rank<<" et j'appelle reduce "<<endl;
+	//prixGlobal += prix;
+	double prixGlobal = 0.0;
+	MPI_Reduce(&prix, &prixGlobal, 1, MPI_DOUBLE,MPI_SUM, 0, MPI_COMM_WORLD);
+	cout<<"Prix global courant : "<<prixGlobal<<endl;
+
+	double icGlobal = 0.0;
+	MPI_Reduce(&ic, &icGlobal, 1, MPI_DOUBLE,MPI_SUM, 0, MPI_COMM_WORLD);
+
+	if(rank == 0){		
+		utils::price_master(&prixGlobal,&icGlobal,MPI_COMM_WORLD);
+	}
+
 
 	MPI_Finalize ();
 

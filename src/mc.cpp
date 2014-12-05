@@ -372,4 +372,3 @@ void MonteCarlo::delta(const PnlMat *past, double t, PnlVect *delta, PnlVect *ic
   pnl_mat_free(&path_shift_down);
 }
  
-

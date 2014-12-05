@@ -366,4 +366,14 @@ namespace utils {
 
   }
 
+
+  void price_master(double* fluxPrixTotal, double* fluxICTotal, MPI_Comm comm){
+    cout<<"Price_master Prix:"<<endl;
+    cout<<*fluxPrixTotal<<endl;
+
+    cout<<"Price_master IC:"<<endl;
+    cout<<*fluxICTotal<<endl;
+
+  }
+
 } // utils
