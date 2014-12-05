@@ -355,7 +355,7 @@ namespace utils {
     double h;
     int H;
     //int samples = 50000 ;
-    int samples = 500 ;
+    int samples = 10000 ;
 
     MPI_Unpack(*buf,*bufsize,pos,&H,1,MPI_INT,comm);
     MPI_Unpack(*buf,*bufsize,pos,&h,1,MPI_DOUBLE,comm);
@@ -367,13 +367,9 @@ namespace utils {
   }
 
 
-  void price_master(double* fluxPrixTotal, double* fluxICTotal, MPI_Comm comm){
-    cout<<"Price_master Prix:"<<endl;
-    cout<<*fluxPrixTotal<<endl;
-
-    cout<<"Price_master IC:"<<endl;
-    cout<<*fluxICTotal<<endl;
-
+  void price_master(double* PrixTotal, double* ICTotal, int sizeComWorld){
+    *PrixTotal = *PrixTotal / (sizeComWorld-1);
+    *ICTotal = *ICTotal / (sizeComWorld-1);
   }
 
 } // utils

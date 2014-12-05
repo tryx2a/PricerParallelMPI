@@ -22,9 +22,10 @@ int main(int argc, char **argv){
 	double prix = 0;
 	double ic = 0;
 
+	double begin = MPI_Wtime();
 	
 	if(rank == 0){
-		cout<<"Je suis le maitre"<<endl;
+		
 		int tag = 12;
 
 		const char * infile = argv[1];
@@ -62,8 +63,6 @@ int main(int argc, char **argv){
 	}
 
 	if(rank != 0){
-		cout<<"Je suis l esclave : "<<rank<<endl;
-
 		int tag =12;
 		int info, count,bufsize,pos = 0;
 		void *buf;
@@ -88,8 +87,8 @@ int main(int argc, char **argv){
 
 
 		mc->price(prix,ic);
-		cout<<"Prix de l'esclave "<<rank<<" : "<<prix<<endl;
-		cout<<"Intervalle de confiance de l'esclave "<<rank<<" : "<<ic<<endl;
+		/*cout<<"Prix de l'esclave "<<rank<<" : "<<prix<<endl;
+		cout<<"Intervalle de confiance de l'esclave "<<rank<<" : "<<ic<<endl;*/
 
 		//MPI_Reduce(&prix,&prixGlobal, 1, MPI_FLOAT, MPI_SUM, 0,MPI_COMM_WORLD);
 		
@@ -101,18 +100,24 @@ int main(int argc, char **argv){
 
 	}
 
-	cout<<"Je suis rank "<<rank<<" et j'appelle reduce "<<endl;
-	//prixGlobal += prix;
+	
 	double prixGlobal = 0.0;
 	MPI_Reduce(&prix, &prixGlobal, 1, MPI_DOUBLE,MPI_SUM, 0, MPI_COMM_WORLD);
-	cout<<"Prix global courant : "<<prixGlobal<<endl;
 
 	double icGlobal = 0.0;
 	MPI_Reduce(&ic, &icGlobal, 1, MPI_DOUBLE,MPI_SUM, 0, MPI_COMM_WORLD);
 
 	if(rank == 0){		
-		utils::price_master(&prixGlobal,&icGlobal,MPI_COMM_WORLD);
+		utils::price_master(&prixGlobal,&icGlobal,size);
+
+		cout<<"Prix final : "<<prixGlobal<<endl;
+		cout<<"IC final : "<<icGlobal<<endl;
+
+		double end = MPI_Wtime();
+		cout<<"Temps : "<<end-begin<<endl;
 	}
+
+	
 
 
 	MPI_Finalize ();

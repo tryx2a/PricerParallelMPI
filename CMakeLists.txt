@@ -50,15 +50,15 @@ include_directories(${PNL_INCLUDE_DIRS})
 set(LIBS ${LIBS} m)
 
 
-add_executable(main src/parser.cpp src/utils.cpp src/option.cpp src/optionBarrierLow.cpp src/optionBarrierUp.cpp src/optionAsian.cpp src/optionBasket.cpp src/optionBarrier.cpp src/optionPerformance.cpp src/bs.cpp src/mc.cpp src/main.cpp )
-target_link_libraries(main ${MPI_LIBS} ${LIBS})
+#add_executable(main src/parser.cpp src/utils.cpp src/option.cpp src/optionBarrierLow.cpp src/optionBarrierUp.cpp src/optionAsian.cpp src/optionBasket.cpp src/optionBarrier.cpp src/optionPerformance.cpp src/bs.cpp src/mc.cpp src/main.cpp )
+#target_link_libraries(main ${MPI_LIBS} ${LIBS})
 
 #add_executable(main_test src/main_test.cpp )
 #target_link_libraries(main_test ${MPI_LIBS} ${LIBS})
 
 
-add_executable(main_pack_pnl src/main_packing_pnl.cpp )
-target_link_libraries(main_pack_pnl ${MPI_LIBS} ${LIBS})
+#add_executable(main_pack_pnl src/main_packing_pnl.cpp )
+#target_link_libraries(main_pack_pnl ${MPI_LIBS} ${LIBS})
 
 
 #add_executable(main_pack_b src/main_pack_basic.cpp )

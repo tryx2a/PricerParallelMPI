@@ -41,7 +41,7 @@ namespace utils {
 	MonteCarlo* mc_mpi_unpack(void **buf, int* bufsize, int* count, int* pos, MPI_Comm comm,BS* bs, Option* op, int rank);
 
 	//Princing du master
-	void price_master(double *fluxPrixTotal, double *fluxICTotal);
+	void price_master(double *PrixTotal, double *ICTotal, int sizeCommWorld);
 
 } // utils
 

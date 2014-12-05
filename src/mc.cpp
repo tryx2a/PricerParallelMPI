@@ -216,7 +216,7 @@ void MonteCarlo::price(double &prix, double &ic){
   double varEstimator = cst * (mean_payOffSquare - (payOffOption*payOffOption));
   
   //Print estimator variance on screen : To be remove ?
-  cout<<"Var Estimator: "<<varEstimator<<endl;
+  //cout<<"Var Estimator: "<<varEstimator<<endl;
   
   ic = (prix + 1.96*sqrt(varEstimator)/sqrt(this->samples_)) - (prix - 1.96*sqrt(varEstimator)/sqrt(this->samples_));
 }
