@@ -14,5 +14,7 @@ payoff coefficients <vector> 0.2 0.2 0.2 0.2 0.2
 upper barrier <vector> 70 60 85 50 45
 
 timestep number <int> 12
+hedging dates number <int> 30
+fd step <float> 0.1
 sample number <int> 100000
 

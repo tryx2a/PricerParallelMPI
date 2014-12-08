@@ -64,15 +64,13 @@ int main(int argc, char **argv){
 			}
 		}
 
-<<<<<<< HEAD
 		int subSamples = utils::computeSubSample(mc->samples_,size);
 		mc->setSamples(subSamples + (mc->samples_ % size) );
 
 		/*mc->price(prix, ic);
 		cout<<prix<<endl;
 		cout<<ic<<endl;*/
-=======
->>>>>>> cc32fbb671138010ea3114c359e415adc488a557
+
 	}
 
 	else { //Slaves

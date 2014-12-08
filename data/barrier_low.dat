@@ -13,7 +13,9 @@ correlation <float> 0.3
 option type <string> barrier_l
 payoff coefficients <vector> 0.2 0.2 0.2 0.2 0.2
 lower barrier <vector> 40 30 45 20 10
-
+hedging dates number <int> 30
+fd step <float> 0.1
 timestep number <int> 24
+
 sample number <int> 100000
 
