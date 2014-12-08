@@ -332,6 +332,10 @@ void MonteCarlo::freeRiskInvestedPart(PnlVect *V, double T, double &profitLoss){
   pnl_mat_free(&simulMarketResult);
 }
 
+void MonteCarlo::setSamples(int samples){
+  this->samples_ = samples;
+}
+
 void MonteCarlo::delta(const PnlMat *past, double t, PnlVect *delta, PnlVect *ic){
   int nbAsset = this->opt_->size_;
   PnlMat* path_shift_up = pnl_mat_create(this->opt_->TimeSteps_+1, nbAsset);

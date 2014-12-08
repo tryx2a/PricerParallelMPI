@@ -83,6 +83,8 @@ public:
   
   void freeRiskInvestedPart(PnlVect *V,double T, double &profitLoss);
 
+  void setSamples(int samples);
+
 };
 
 #endif /* _MC_H */

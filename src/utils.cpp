@@ -241,6 +241,9 @@ namespace utils {
     info=MPI_Pack_size(1,MPI_DOUBLE, comm,count);
     if (info) return(info);
     *bufsize += *count;
+    info=MPI_Pack_size(1,MPI_INT, comm,count);
+    if (info) return(info);
+    *bufsize += *count;
 
     return 0;
   }
@@ -251,6 +254,8 @@ namespace utils {
     info=MPI_Pack(&(mc->H_),1,MPI_INT,*buf,*bufsize,pos,comm);
     if (info) return info;
     info=MPI_Pack(&(mc->h_),1,MPI_DOUBLE,*buf,*bufsize,pos,comm);
+    if (info) return info;
+     info=MPI_Pack(&(mc->samples_),1,MPI_INT,*buf,*bufsize,pos,comm);
     if (info) return info;
 
     return 0;
@@ -351,16 +356,19 @@ namespace utils {
     }
   }
 
-  MonteCarlo* mc_mpi_unpack(void **buf, int* bufsize, int* count, int* pos, MPI_Comm comm,BS* bs, Option* op, int rank){
+  MonteCarlo* mc_mpi_unpack(void **buf, int* bufsize, int* count, int* pos, MPI_Comm comm,BS* bs, Option* op, int rank, int sizeComWorld){
     double h;
     int H;
     //int samples = 50000 ;
-    int samples = 10000 ;
+    int samples;
 
     MPI_Unpack(*buf,*bufsize,pos,&H,1,MPI_INT,comm);
     MPI_Unpack(*buf,*bufsize,pos,&h,1,MPI_DOUBLE,comm);
+    MPI_Unpack(*buf,*bufsize,pos,&samples,1,MPI_INT,comm);
 
-    MonteCarlo* mc = new MonteCarlo( bs, op, h, H, samples, rank);
+    int subSamples = utils::computeSubSample(samples, sizeComWorld);;
+
+    MonteCarlo* mc = new MonteCarlo( bs, op, h, H, subSamples, rank);
 
     return mc;
 
@@ -370,6 +378,11 @@ namespace utils {
   void price_master(double* PrixTotal, double* ICTotal, int sizeComWorld){
     *PrixTotal = *PrixTotal / (sizeComWorld);
     *ICTotal = *ICTotal / (sizeComWorld);
+  }
+
+  int computeSubSample(int samples, int sizeComWorld){
+      int reste = samples % sizeComWorld;
+      return (samples-reste)/sizeComWorld;
   }
 
 } // utils

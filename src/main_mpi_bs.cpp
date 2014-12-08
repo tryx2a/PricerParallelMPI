@@ -58,6 +58,9 @@ int main(int argc, char **argv){
 			}
 		}
 
+		int subSamples = utils::computeSubSample(mc->samples_,size);
+		mc->setSamples(subSamples + (mc->samples_ % size) );
+
 		/*mc->price(prix, ic);
 		cout<<prix<<endl;
 		cout<<ic<<endl;*/
@@ -83,7 +86,7 @@ int main(int argc, char **argv){
 		BS* bs = utils::bs_mpi_unpack(&buf, &bufsize, &count, &pos,MPI_COMM_WORLD);
 		Option* op = utils::opt_mpi_unpack(&buf, &bufsize, &count, &pos,MPI_COMM_WORLD);
 		//MonteCarlo* mc = utils::mc_mpi_unpack( &buf, &bufsize, &count, &pos,MPI_COMM_WORLD, bs , op , rank) ;
-		mc = utils::mc_mpi_unpack( &buf, &bufsize, &count, &pos,MPI_COMM_WORLD, bs , op , rank) ;
+		mc = utils::mc_mpi_unpack( &buf, &bufsize, &count, &pos,MPI_COMM_WORLD, bs , op , rank , size) ;
 
 		
 
