@@ -42,6 +42,7 @@ namespace utils {
 
 	//Princing du master
 	void price_master(double *PrixTotal, double *ICTotal, int sizeCommWorld);
+	void delta_master(PnlVect *delta, PnlVect *vic, int sizeCommWorld);
 
 } // utils
 
