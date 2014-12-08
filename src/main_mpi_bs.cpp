@@ -28,6 +28,15 @@ int main(int argc, char **argv){
 
 	double begin = MPI_Wtime();
 
+	//if(argv[2] != NULL){
+		double precision = atof(argv[2]);
+	//}else{
+	//	double precision = 1000;
+	//}
+	
+	double prixGlobal = 0.0;
+	double icGlobal = 0.0;
+
 	MonteCarlo* mc;
 
 	if(rank == 0){ //Master
@@ -101,22 +110,29 @@ int main(int argc, char **argv){
 
 	}
 
+do{
+	cout<<"Coucou clément !"<<endl;
+
 	mc->price(prix,ic);
 	mc->delta(NULL,0,delta,vic);
 	
-	double prixGlobal = 0.0;
 	MPI_Reduce(&prix, &prixGlobal, 1, MPI_DOUBLE,MPI_SUM, 0, MPI_COMM_WORLD);
 
-	double icGlobal = 0.0;
 	MPI_Reduce(&ic, &icGlobal, 1, MPI_DOUBLE,MPI_SUM, 0, MPI_COMM_WORLD);
-
 	int info = pnl_object_mpi_reduce (PNL_OBJECT(delta), PNL_OBJECT(deltaGlobal), MPI_SUM, 0, MPI_COMM_WORLD);
-
-
 
 	if(rank == 0){		
 		utils::price_master(&prixGlobal,&icGlobal,size);
 		utils::delta_master(deltaGlobal,vic,size);
+	}
+
+	mc->setSamples( 2*mc->samples_);
+	//cout<<"IC Globale"<<icGlobal<<endl;
+	//cout<<"Precision native"<<precision<<endl;
+
+}while(ic > precision);
+
+ 	if(rank == 0){
 
 		cout<<"Prix final : "<<prixGlobal<<endl;
 		cout<<"IC final : "<<icGlobal<<endl;
@@ -124,7 +140,7 @@ int main(int argc, char **argv){
 		double end = MPI_Wtime();
 		cout<<"Temps : "<<end-begin<<endl;
 		pnl_vect_print(deltaGlobal);
-	}
+ 	}
 
 	
 	pnl_vect_free(&delta);
