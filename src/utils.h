@@ -31,7 +31,7 @@ namespace utils {
   	int mc_mpi_pack(void **buf, int* bufsize, int* count, int* pos,MPI_Comm comm, MonteCarlo *mc);
 
 
-  /*
+  	/*
 	 * Méthodes permettant de unpacker
 	 */
 	BS* bs_mpi_unpack(void **buf, int* bufsize, int* count, int* pos, MPI_Comm comm);

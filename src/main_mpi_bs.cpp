@@ -24,7 +24,7 @@ int main(int argc, char **argv){
 
 	double begin = MPI_Wtime();
 	
-	if(rank == 0){
+	if(rank == 0){ //Master
 		
 		int tag = 12;
 
@@ -55,14 +55,11 @@ int main(int argc, char **argv){
 			}
 		}
 
-		
-		//mc->price_master(&fluxPrixTotal,&fluxICTotal);
-	
+		mc->price(prix, ic);
 
-	//}else{
 	}
 
-	if(rank != 0){
+	else { //Slaves
 		int tag =12;
 		int info, count,bufsize,pos = 0;
 		void *buf;
@@ -87,16 +84,6 @@ int main(int argc, char **argv){
 
 
 		mc->price(prix,ic);
-		/*cout<<"Prix de l'esclave "<<rank<<" : "<<prix<<endl;
-		cout<<"Intervalle de confiance de l'esclave "<<rank<<" : "<<ic<<endl;*/
-
-		//MPI_Reduce(&prix,&prixGlobal, 1, MPI_FLOAT, MPI_SUM, 0,MPI_COMM_WORLD);
-		
-		/*cout<<"Creation du delta"<<endl;
-		PnlVect* delta = pnl_vect_create(op->size_);
-		//pnl_vect_print(delta);
-		mc->delta(NULL, 0, delta, NULL);
-		pnl_vect_print(delta);*/
 
 	}
 
