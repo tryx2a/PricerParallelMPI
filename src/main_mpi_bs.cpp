@@ -23,14 +23,17 @@ int main(int argc, char **argv){
 	double ic = 0;
 
 	double begin = MPI_Wtime();
-	
+
+	MonteCarlo* mc;
+
 	if(rank == 0){ //Master
 		
 		int tag = 12;
 
 		const char * infile = argv[1];
 		Param *P = new Parser(infile);
-		MonteCarlo* mc = new MonteCarlo(P, rank);
+		//MonteCarlo* mc = new MonteCarlo(P, rank);
+		mc = new MonteCarlo(P, rank);
 
 		void *buf;
 		int info, count, bufsize=0, pos=0;
@@ -55,8 +58,9 @@ int main(int argc, char **argv){
 			}
 		}
 
-		mc->price(prix, ic);
-
+		/*mc->price(prix, ic);
+		cout<<prix<<endl;
+		cout<<ic<<endl;*/
 	}
 
 	else { //Slaves
@@ -78,15 +82,15 @@ int main(int argc, char **argv){
 		//On unpack les objets
 		BS* bs = utils::bs_mpi_unpack(&buf, &bufsize, &count, &pos,MPI_COMM_WORLD);
 		Option* op = utils::opt_mpi_unpack(&buf, &bufsize, &count, &pos,MPI_COMM_WORLD);
-		MonteCarlo* mc = utils::mc_mpi_unpack( &buf, &bufsize, &count, &pos,MPI_COMM_WORLD, bs , op , rank) ;
+		//MonteCarlo* mc = utils::mc_mpi_unpack( &buf, &bufsize, &count, &pos,MPI_COMM_WORLD, bs , op , rank) ;
+		mc = utils::mc_mpi_unpack( &buf, &bufsize, &count, &pos,MPI_COMM_WORLD, bs , op , rank) ;
 
 		
 
 
-		mc->price(prix,ic);
-
 	}
 
+	mc->price(prix,ic);
 	
 	double prixGlobal = 0.0;
 	MPI_Reduce(&prix, &prixGlobal, 1, MPI_DOUBLE,MPI_SUM, 0, MPI_COMM_WORLD);

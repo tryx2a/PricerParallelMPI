@@ -368,8 +368,8 @@ namespace utils {
 
 
   void price_master(double* PrixTotal, double* ICTotal, int sizeComWorld){
-    *PrixTotal = *PrixTotal / (sizeComWorld-1);
-    *ICTotal = *ICTotal / (sizeComWorld-1);
+    *PrixTotal = *PrixTotal / (sizeComWorld);
+    *ICTotal = *ICTotal / (sizeComWorld);
   }
 
 } // utils
