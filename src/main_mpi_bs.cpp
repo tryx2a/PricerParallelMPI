@@ -8,6 +8,7 @@
 //Lib du pricer
 #include "mc.h"
 #include "utils.h"
+#include "pnl/pnl_mpi.h"
 
 
 using namespace std;
@@ -21,6 +22,9 @@ int main(int argc, char **argv){
 
 	double prix = 0;
 	double ic = 0;
+	PnlVect *delta;
+	PnlVect *vic;
+	PnlVect *deltaGlobal;
 
 	double begin = MPI_Wtime();
 
@@ -32,12 +36,14 @@ int main(int argc, char **argv){
 
 		const char * infile = argv[1];
 		Param *P = new Parser(infile);
-		//MonteCarlo* mc = new MonteCarlo(P, rank);
 		mc = new MonteCarlo(P, rank);
 
 		void *buf;
 		int info, count, bufsize=0, pos=0;
-		
+		delta = pnl_vect_create(mc->mod_->size_);
+		deltaGlobal = pnl_vect_create(mc->mod_->size_);
+		vic = pnl_vect_create(mc->mod_->size_);
+
 		utils::bs_mpi_pack_size(&bufsize, &count, &pos, MPI_COMM_WORLD, mc->mod_ );
 		utils::opt_mpi_pack_size(&bufsize, &count, &pos, MPI_COMM_WORLD, mc->opt_);
 		utils::mc_mpi_pack_size(&bufsize, &count, &pos,MPI_COMM_WORLD);
@@ -58,12 +64,15 @@ int main(int argc, char **argv){
 			}
 		}
 
+<<<<<<< HEAD
 		int subSamples = utils::computeSubSample(mc->samples_,size);
 		mc->setSamples(subSamples + (mc->samples_ % size) );
 
 		/*mc->price(prix, ic);
 		cout<<prix<<endl;
 		cout<<ic<<endl;*/
+=======
+>>>>>>> cc32fbb671138010ea3114c359e415adc488a557
 	}
 
 	else { //Slaves
@@ -85,15 +94,17 @@ int main(int argc, char **argv){
 		//On unpack les objets
 		BS* bs = utils::bs_mpi_unpack(&buf, &bufsize, &count, &pos,MPI_COMM_WORLD);
 		Option* op = utils::opt_mpi_unpack(&buf, &bufsize, &count, &pos,MPI_COMM_WORLD);
-		//MonteCarlo* mc = utils::mc_mpi_unpack( &buf, &bufsize, &count, &pos,MPI_COMM_WORLD, bs , op , rank) ;
 		mc = utils::mc_mpi_unpack( &buf, &bufsize, &count, &pos,MPI_COMM_WORLD, bs , op , rank , size) ;
 
-		
 
+		delta = pnl_vect_create(mc->mod_->size_);
+		deltaGlobal = pnl_vect_create(mc->mod_->size_);
+		vic = pnl_vect_create(mc->mod_->size_);
 
 	}
 
 	mc->price(prix,ic);
+	mc->delta(NULL,0,delta,vic);
 	
 	double prixGlobal = 0.0;
 	MPI_Reduce(&prix, &prixGlobal, 1, MPI_DOUBLE,MPI_SUM, 0, MPI_COMM_WORLD);
@@ -101,18 +112,26 @@ int main(int argc, char **argv){
 	double icGlobal = 0.0;
 	MPI_Reduce(&ic, &icGlobal, 1, MPI_DOUBLE,MPI_SUM, 0, MPI_COMM_WORLD);
 
+	int info = pnl_object_mpi_reduce (PNL_OBJECT(delta), PNL_OBJECT(deltaGlobal), MPI_SUM, 0, MPI_COMM_WORLD);
+
+
+
 	if(rank == 0){		
 		utils::price_master(&prixGlobal,&icGlobal,size);
+		utils::delta_master(deltaGlobal,vic,size);
 
 		cout<<"Prix final : "<<prixGlobal<<endl;
 		cout<<"IC final : "<<icGlobal<<endl;
 
 		double end = MPI_Wtime();
 		cout<<"Temps : "<<end-begin<<endl;
+		pnl_vect_print(deltaGlobal);
 	}
 
 	
-
+	pnl_vect_free(&delta);
+  	pnl_vect_free(&deltaGlobal);
+  	pnl_vect_free(&vic);
 
 	MPI_Finalize ();
 

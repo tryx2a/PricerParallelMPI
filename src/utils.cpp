@@ -380,9 +380,17 @@ namespace utils {
     *ICTotal = *ICTotal / (sizeComWorld);
   }
 
+<<<<<<< HEAD
   int computeSubSample(int samples, int sizeComWorld){
       int reste = samples % sizeComWorld;
       return (samples-reste)/sizeComWorld;
+=======
+  void delta_master(PnlVect *delta, PnlVect *vic, int sizeCommWorld){
+    int size = delta->size;
+    for(int i=0; i<size; i++){
+      LET(delta,i) = GET(delta,i)/sizeCommWorld;
+    }
+>>>>>>> cc32fbb671138010ea3114c359e415adc488a557
   }
 
 } // utils
