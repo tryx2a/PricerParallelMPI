@@ -25,14 +25,18 @@ int main(int argc, char **argv){
 	PnlVect *delta;
 	PnlVect *vic;
 	PnlVect *deltaGlobal;
+	double precision;
+	bool optionPrecision;
 
 	double begin = MPI_Wtime();
 
-	//if(argv[2] != NULL){
-		double precision = atof(argv[2]);
-	//}else{
-	//	double precision = 1000;
-	//}
+	if(argv[2] != NULL){
+		precision = atof(argv[2]);
+		optionPrecision = true;
+	}else{
+		precision = 1000;
+		optionPrecision = false;
+	}
 	
 	double prixGlobal = 0.0;
 	double icGlobal = 0.0;
@@ -76,10 +80,6 @@ int main(int argc, char **argv){
 		int subSamples = utils::computeSubSample(mc->samples_,size);
 		mc->setSamples(subSamples + (mc->samples_ % size) );
 
-		/*mc->price(prix, ic);
-		cout<<prix<<endl;
-		cout<<ic<<endl;*/
-
 	}
 
 	else { //Slaves
@@ -111,8 +111,6 @@ int main(int argc, char **argv){
 	}
 
 do{
-	cout<<"Coucou clément !"<<endl;
-
 	mc->price(prix,ic);
 	mc->delta(NULL,0,delta,vic);
 	
@@ -127,10 +125,8 @@ do{
 	}
 
 	mc->setSamples( 2*mc->samples_);
-	//cout<<"IC Globale"<<icGlobal<<endl;
-	//cout<<"Precision native"<<precision<<endl;
 
-}while(ic > precision);
+}while(optionPrecision && ic > precision);
 
  	if(rank == 0){
 
@@ -139,6 +135,7 @@ do{
 
 		double end = MPI_Wtime();
 		cout<<"Temps : "<<end-begin<<endl;
+		cout<<"Delta : "<<endl;
 		pnl_vect_print(deltaGlobal);
  	}
 

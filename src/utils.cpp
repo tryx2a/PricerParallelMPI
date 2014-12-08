@@ -359,7 +359,6 @@ namespace utils {
   MonteCarlo* mc_mpi_unpack(void **buf, int* bufsize, int* count, int* pos, MPI_Comm comm,BS* bs, Option* op, int rank, int sizeComWorld){
     double h;
     int H;
-    //int samples = 50000 ;
     int samples;
 
     MPI_Unpack(*buf,*bufsize,pos,&H,1,MPI_INT,comm);
