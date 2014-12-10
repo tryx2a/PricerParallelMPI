@@ -263,7 +263,6 @@ void MonteCarlo::price(const PnlMat *past, double t, double &prix, double &ic){
 
 
 void MonteCarlo::freeRiskInvestedPart(PnlVect *V, double T, double &profitLoss){
-  //V = pnl_vect_create(this->H_);
   PnlMat *simulMarketResult, *tempMarketResult;
   simulMarketResult = pnl_mat_create(this->H_+1,this->mod_->size_);
   

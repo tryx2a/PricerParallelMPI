@@ -47,6 +47,9 @@ namespace utils {
 	//Compute samples slave
 	int computeSubSample(int samples, int sizeComWorld);
 
+	//Price Parallel
+	int priceParallel(int argc, char **argv);
+
 } // utils
 
 
