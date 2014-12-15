@@ -16,6 +16,9 @@
 #include "pnl/pnl_matrix.h"
 
 namespace utils {
+	/*
+	 * Calcul le payoff des options baskets et de la déclinaison des options barrières
+	 */
 	double computePayoff(const PnlMat *path, const PnlVect *payoffCoeff_, int TimeSteps_, double strike);	
 
 	/*
@@ -35,9 +38,7 @@ namespace utils {
 	 * Méthodes permettant de unpacker
 	 */
 	BS* bs_mpi_unpack(void **buf, int* bufsize, int* count, int* pos, MPI_Comm comm);
-
 	Option* opt_mpi_unpack(void **buf, int* bufsize, int* count, int* pos, MPI_Comm comm);
-
 	MonteCarlo* mc_mpi_unpack(void **buf, int* bufsize, int* count, int* pos, MPI_Comm comm,BS* bs, Option* op, int rank,int sizeComWorld);
 
 	//Princing du master

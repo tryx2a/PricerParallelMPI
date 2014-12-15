@@ -57,14 +57,10 @@ namespace utils {
     info=MPI_Pack_size(1,MPI_INT, comm,count);
     if (info) return(info);
     *bufsize += *count;   
-    /*if(mod_->trend != NULL){  
-      info = pnl_object_mpi_pack_size( PNL_OBJECT(mod_->trend) , comm, count );
-      if (info) return info;
-      *bufsize += *count;
-    }*/
 
     return 0;
   }
+  
 
   int bs_mpi_pack(void** buf, int* bufsize, int* count, int* pos,MPI_Comm comm, BS* mod_){
 
@@ -80,10 +76,6 @@ namespace utils {
     if (info) return info;
     info=MPI_Pack(&(mod_->size_),1,MPI_INT,*buf,*bufsize,pos,comm);
     if (info) return info;
-    /*if(mod_->trend != NULL){
-      info = pnl_object_mpi_pack( PNL_OBJECT(mod_->trend), *buf,*bufsize,pos,comm);
-      if(info) return info;
-    }*/
 
     return 0;
   }
@@ -269,14 +261,12 @@ namespace utils {
     double rho ;
     double r ;
     int sizeBS;
-    //PnlVect* trend = pnl_vect_new ();
 
     pnl_object_mpi_unpack (PNL_OBJECT(spot), *buf,*bufsize,pos,comm);
     pnl_object_mpi_unpack (PNL_OBJECT(sigma), *buf,*bufsize,pos,comm);
     MPI_Unpack(*buf,*bufsize,pos,&(rho),1,MPI_DOUBLE,comm);
     MPI_Unpack(*buf,*bufsize,pos,&(r),1,MPI_DOUBLE,comm);
     MPI_Unpack(*buf,*bufsize,pos,&(sizeBS),1,MPI_INT,comm);
-    //pnl_object_mpi_unpack (PNL_OBJECT(trend), *buf,*bufsize,pos,comm);
     
     BS* bs = new BS(spot,sigma,rho,r,sizeBS,NULL);
 
@@ -417,6 +407,7 @@ namespace utils {
   
     double prixGlobal = 0.0;
     double icGlobal = 0.0;
+    int nbTirages = 0;
 
     MonteCarlo* mc;
 
@@ -488,31 +479,35 @@ namespace utils {
     }
 
   do{
+
+    //exécution de la méthode price par tous les processus
     mc->price(prix,ic);
-    mc->delta(NULL,0,delta,vic);
+    //mc->delta(NULL,0,delta,vic);
     
+    //Réduction des résultats intermédiaires dans la varialble prixGlobal
     MPI_Reduce(&prix, &prixGlobal, 1, MPI_DOUBLE,MPI_SUM, 0, MPI_COMM_WORLD);
     MPI_Reduce(&ic, &icGlobal, 1, MPI_DOUBLE,MPI_SUM, 0, MPI_COMM_WORLD);
-    int info = pnl_object_mpi_reduce (PNL_OBJECT(delta), PNL_OBJECT(deltaGlobal), MPI_SUM, 0, MPI_COMM_WORLD);
+    MPI_Reduce(&(mc->cumulative_samples), &nbTirages, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+    //int info = pnl_object_mpi_reduce (PNL_OBJECT(delta), PNL_OBJECT(deltaGlobal), MPI_SUM, 0, MPI_COMM_WORLD);
 
-    if(rank == 0){    
+    if(rank == 0){
+      //Le processus maître se charge de calculer le prix global    
       utils::price_master(&prixGlobal,&icGlobal,size);
-      utils::delta_master(deltaGlobal,vic,size);
+      //utils::delta_master(deltaGlobal,vic,size);
     }
-
-    mc->setSamples( 2*mc->samples_);
 
   }while(optionPrecision && ic > precision);
 
     if(rank == 0){
-
-      cout<<"Prix final : "<<prixGlobal<<endl;
+      cout<<"Nombre de tirages : "<<nbTirages<<endl;
+      cout<<"Prix en 0 : "<<prixGlobal<<endl;
       cout<<"IC final : "<<icGlobal<<endl;
 
       double end = MPI_Wtime();
-      cout<<"Temps : "<<end-begin<<endl;
-      cout<<"Delta : "<<endl;
-      pnl_vect_print(deltaGlobal);
+      cout<<"Temps de calcul du prix : "<<end-begin<<endl;
+      mc->delta(NULL,0,delta,vic);
+      cout<<"Delta en 0 : "<<endl;
+      pnl_vect_print(delta);
     }
 
     

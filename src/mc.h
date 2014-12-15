@@ -22,16 +22,13 @@ public:
   double h_; /*! pas de différence finie */
   int H_; /* nombre de période de rebalancement*/
   int samples_; /*! nombre de tirages Monte Carlo */
+  double payOffOption; /*! stock la valeur non agréger du payoff */
+  double mean_payOffOptionSquare; /*! stock la valeur non agréger du payoff au carré */
+  int cumulative_samples; /*! nombre de tirages Monte Carlo cumulé */
 
   MonteCarlo(Param* P, int rank);
 
-  //MonteCarlo(int rank);
-
   MonteCarlo( BS* bs,  Option* op,  double h_,  int H_ ,  int samples_, int rank);
-
-  //MonteCarlo( void **buf, int* bufsize, int* count, int* pos, MPI_Comm comm , int rank);
-
-  MonteCarlo(int rank);
 
   ~MonteCarlo();
 
@@ -84,6 +81,8 @@ public:
   void freeRiskInvestedPart(PnlVect *V,double T, double &profitLoss);
 
   void setSamples(int samples);
+
+  void resetCumulativeSamples();
 
 };
 

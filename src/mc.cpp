@@ -33,6 +33,10 @@ MonteCarlo::MonteCarlo(Param* P, int rank)
 
   P->extract("sample number", this->samples_);
 
+  this->payOffOption = 0;
+  this->mean_payOffOptionSquare = 0;
+  this->cumulative_samples = 0;
+
   int search_seed = 4192;
   int myseed = 0;
   this->rng = pnl_rng_dcmt_create_id(rank, search_seed);
@@ -49,6 +53,10 @@ MonteCarlo::MonteCarlo(BS* bs, Option* op, double h, int H , int samples, int ra
   this->H_ = H;
   this->samples_ = samples;
 
+  this->payOffOption = 0;
+  this->mean_payOffOptionSquare = 0;
+  this->cumulative_samples = 0;
+
   int search_seed = 4192;
   int myseed = 0;
   this->rng = pnl_rng_dcmt_create_id(rank, search_seed);
@@ -56,18 +64,6 @@ MonteCarlo::MonteCarlo(BS* bs, Option* op, double h, int H , int samples, int ra
   
 }
 
-
-MonteCarlo::MonteCarlo(int rank){
-  BS* bs ;
-  Option* opt ;
-  this->h_ = 0;
-  this->H_ = 0;
-
-  int search_seed = 4192;
-  int myseed = 0;
-  this->rng = pnl_rng_dcmt_create_id(rank, search_seed);
-  pnl_rng_sseed (this->rng, myseed);
-}
 
 MonteCarlo::~MonteCarlo(){
   delete (this->mod_)->spot_;
@@ -190,22 +186,24 @@ void MonteCarlo::price(double &prix, double &ic){
   path= pnl_mat_create(opt_->TimeSteps_+1,(this->mod_)->size_);
 
   //Calcul du payOff   
-  double payOffOption=0;
-  double mean_payOffSquare=0;
+  double tmp_payOff = 0;
+  double tmp_mean_payOffSquare = 0; 
   double tmp;
 
   for(int m=1; m<=this->samples_; m++){
     mod_->asset(path, opt_->T_, opt_->TimeSteps_, this->rng);
     tmp = opt_->payoff(path);
     payOffOption += tmp;
-    mean_payOffSquare += tmp*tmp;
+    mean_payOffOptionSquare += tmp*tmp;
   }
+
+  this->cumulative_samples += samples_;
   
-  payOffOption  = payOffOption/this->samples_;
-  mean_payOffSquare = mean_payOffSquare/this->samples_;
+  tmp_payOff  = payOffOption/this->cumulative_samples;
+  tmp_mean_payOffSquare = mean_payOffOptionSquare/this->cumulative_samples;
 
   //Calcul du prix de l'option en t=0
-  prix = coeffActu * payOffOption;
+  prix = coeffActu * tmp_payOff;
 
   //Free path
   pnl_mat_free(&path);
@@ -213,12 +211,10 @@ void MonteCarlo::price(double &prix, double &ic){
   //Calcul de la largeur de l'intervalle de confinace
   double cst = exp(- 2 * (mod_->r_ * opt_->T_));
   
-  double varEstimator = cst * (mean_payOffSquare - (payOffOption*payOffOption));
+  double varEstimator = cst * (tmp_mean_payOffSquare - (tmp_payOff*tmp_payOff));
   
-  //Print estimator variance on screen : To be remove ?
-  //cout<<"Var Estimator: "<<varEstimator<<endl;
   
-  ic = (prix + 1.96*sqrt(varEstimator)/sqrt(this->samples_)) - (prix - 1.96*sqrt(varEstimator)/sqrt(this->samples_));
+  ic = (prix + 1.96*sqrt(varEstimator)/sqrt(this->cumulative_samples)) - (prix - 1.96*sqrt(varEstimator)/sqrt(this->cumulative_samples));
 }
 
 
@@ -236,6 +232,7 @@ void MonteCarlo::price(const PnlMat *past, double t, double &prix, double &ic){
   double payOffOption=0;
   double mean_payOffSquare=0;
   double tmp;
+  
   for(int m=1; m<=this->samples_; m++){
     mod_->asset(path, t, opt_->TimeSteps_, opt_->T_, this->rng, past);
     tmp = opt_->payoff(path);
@@ -333,6 +330,10 @@ void MonteCarlo::freeRiskInvestedPart(PnlVect *V, double T, double &profitLoss){
 
 void MonteCarlo::setSamples(int samples){
   this->samples_ = samples;
+}
+
+void MonteCarlo::resetCumulativeSamples(){
+  this->cumulative_samples = 0;
 }
 
 void MonteCarlo::delta(const PnlMat *past, double t, PnlVect *delta, PnlVect *ic){
