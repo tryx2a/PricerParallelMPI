@@ -41,9 +41,6 @@ namespace utils {
 	Option* opt_mpi_unpack(void **buf, int* bufsize, int* count, int* pos, MPI_Comm comm);
 	MonteCarlo* mc_mpi_unpack(void **buf, int* bufsize, int* count, int* pos, MPI_Comm comm,BS* bs, Option* op, int rank,int sizeComWorld);
 
-	//Princing du master
-	void price_master(double *PrixTotal, double *ICTotal, int sizeCommWorld);
-	void delta_master(PnlVect *delta, PnlVect *vic, int sizeCommWorld);
 
 	//Compute samples slave
 	int computeSubSample(int samples, int sizeComWorld);

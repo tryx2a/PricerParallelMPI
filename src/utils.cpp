@@ -364,21 +364,11 @@ namespace utils {
   }
 
 
-  void price_master(double* PrixTotal, double* ICTotal, int sizeComWorld){
-    *PrixTotal = *PrixTotal / (sizeComWorld);
-    *ICTotal = *ICTotal / (sizeComWorld);
-  }
-
   int computeSubSample(int samples, int sizeComWorld){
       int reste = samples % sizeComWorld;
       return (samples-reste)/sizeComWorld;
   }
   
-  void delta_master(PnlVect *delta, PnlVect *vic, int sizeCommWorld){
-    int size = delta->size;
-    for(int i=0; i<size; i++){
-      LET(delta,i) = GET(delta,i)/sizeCommWorld;
-    }
-  }
+  
 
 } // utils

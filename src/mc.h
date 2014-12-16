@@ -80,6 +80,12 @@ public:
   
   void freeRiskInvestedPart(PnlVect *V,double T, double &profitLoss);
 
+  //Calcul du prix final
+  void price_master(double *PrixTotal, double *ICTotal, int sizeCommWorld);
+
+  //Calcul du delta final
+  void delta_master(PnlVect *delta, PnlVect *vic, int sizeCommWorld);
+
   void setSamples(int samples);
 
   void resetCumulativeSamples();

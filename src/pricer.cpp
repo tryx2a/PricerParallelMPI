@@ -27,6 +27,7 @@ int main(int argc, char **argv){
     PnlVect *delta;
     PnlVect *vic;
     PnlVect *deltaGlobal;
+    PnlVect *vicGlobal;
     double precision;
     bool optionPrecision;
 
@@ -59,6 +60,7 @@ int main(int argc, char **argv){
       delta = pnl_vect_create(mc->mod_->size_);
       deltaGlobal = pnl_vect_create(mc->mod_->size_);
       vic = pnl_vect_create(mc->mod_->size_);
+      vicGlobal = pnl_vect_create(mc->mod_->size_);
 
       utils::bs_mpi_pack_size(&bufsize, &count, &pos, MPI_COMM_WORLD, mc->mod_ );
       utils::opt_mpi_pack_size(&bufsize, &count, &pos, MPI_COMM_WORLD, mc->opt_);
@@ -110,45 +112,51 @@ int main(int argc, char **argv){
       delta = pnl_vect_create(mc->mod_->size_);
       deltaGlobal = pnl_vect_create(mc->mod_->size_);
       vic = pnl_vect_create(mc->mod_->size_);
+      vicGlobal = pnl_vect_create(mc->mod_->size_);
 
     }
 
-  do{
 
-    //exécution de la méthode price par tous les processus
-    mc->price(prix,ic);
-    //mc->delta(NULL,0,delta,vic);
+  	do{ //Tant qu'on a pas la précision recquise, on continue les tours de boucle
+
+    	//exécution de la méthode price par tous les processus
+    	mc->price(prix,ic); 
     
-    //Réduction des résultats intermédiaires dans la varialble prixGlobal
-    MPI_Reduce(&prix, &prixGlobal, 1, MPI_DOUBLE,MPI_SUM, 0, MPI_COMM_WORLD);
-    MPI_Reduce(&ic, &icGlobal, 1, MPI_DOUBLE,MPI_SUM, 0, MPI_COMM_WORLD);
-    MPI_Reduce(&(mc->cumulative_samples), &nbTirages, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
-    //int info = pnl_object_mpi_reduce (PNL_OBJECT(delta), PNL_OBJECT(deltaGlobal), MPI_SUM, 0, MPI_COMM_WORLD);
+    	//Réduction des résultats intermédiaires dans la varialble prixGlobal
+    	MPI_Reduce(&prix, &prixGlobal, 1, MPI_DOUBLE,MPI_SUM, 0, MPI_COMM_WORLD);
+    	MPI_Reduce(&ic, &icGlobal, 1, MPI_DOUBLE,MPI_SUM, 0, MPI_COMM_WORLD);
+    	MPI_Reduce(&(mc->cumulative_samples), &nbTirages, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
 
-    if(rank == 0){
-      //Le processus maître se charge de calculer le prix global    
-      utils::price_master(&prixGlobal,&icGlobal,size);
-      //utils::delta_master(deltaGlobal,vic,size);
-    }
+  	}while(optionPrecision && ic > precision); 
 
-  }while(optionPrecision && ic > precision);
+  	//exécution de la méthode delta par tous les processus puis réduction des résultats
+  	mc->delta(NULL,0,delta,vic);
+  	int info;
+  	info = pnl_object_mpi_reduce (PNL_OBJECT(delta), PNL_OBJECT(deltaGlobal), MPI_SUM, 0, MPI_COMM_WORLD);
+  	info = pnl_object_mpi_reduce (PNL_OBJECT(vic), PNL_OBJECT(vicGlobal), MPI_SUM, 0, MPI_COMM_WORLD);
 
-    if(rank == 0){
+  	if(rank == 0){
       cout<<"Nombre de tirages : "<<nbTirages<<endl;
+
+      mc->price_master(&prixGlobal,&icGlobal,size);
       cout<<"Prix en 0 : "<<prixGlobal<<endl;
-      cout<<"IC final : "<<icGlobal<<endl;
+      cout<<"IC Prix : "<<icGlobal<<endl;
 
       double end = MPI_Wtime();
       cout<<"Temps de calcul du prix : "<<end-begin<<endl;
-      mc->delta(NULL,0,delta,vic);
+
+      mc->delta_master(deltaGlobal,vicGlobal,size);
       cout<<"Delta en 0 : "<<endl;
-      pnl_vect_print(delta);
+      pnl_vect_print(deltaGlobal);
+      cout<<"IC Delta : "<<endl;
+      pnl_vect_print(vicGlobal);
     }
 
     
     pnl_vect_free(&delta);
     pnl_vect_free(&deltaGlobal);
     pnl_vect_free(&vic);
+    pnl_vect_free(&vicGlobal);
 
     MPI_Finalize ();
     

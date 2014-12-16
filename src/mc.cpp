@@ -214,7 +214,8 @@ void MonteCarlo::price(double &prix, double &ic){
   double varEstimator = cst * (tmp_mean_payOffSquare - (tmp_payOff*tmp_payOff));
   
   
-  ic = (prix + 1.96*sqrt(varEstimator)/sqrt(this->cumulative_samples)) - (prix - 1.96*sqrt(varEstimator)/sqrt(this->cumulative_samples));
+  ic = 2 * 1.96*sqrt(varEstimator)/sqrt(this->cumulative_samples);
+
 }
 
 
@@ -255,7 +256,7 @@ void MonteCarlo::price(const PnlMat *past, double t, double &prix, double &ic){
   double varEstimator = cst * (mean_payOffSquare - (payOffOption*payOffOption));
   
   
-  ic = (prix + 1.96*sqrt(varEstimator)/sqrt(this->samples_)) - (prix - 1.96*sqrt(varEstimator)/sqrt(this->samples_));
+  ic = (1.96*sqrt(varEstimator)/sqrt(this->samples_)) - (prix - 1.96*sqrt(varEstimator)/sqrt(this->samples_));
 }
 
 
@@ -342,6 +343,8 @@ void MonteCarlo::delta(const PnlMat *past, double t, PnlVect *delta, PnlVect *ic
   PnlMat* path_shift_down = pnl_mat_create(this->opt_->TimeSteps_+1, nbAsset);
   PnlMat* path = pnl_mat_create(this->opt_->TimeSteps_+1, nbAsset);
   PnlVect* sum=pnl_vect_create(nbAsset);
+  PnlVect* sumSquare=pnl_vect_create(nbAsset);
+  PnlVect* varEstimator=pnl_vect_create(nbAsset);
   double tstep=this->opt_->T_/this->opt_->TimeSteps_;
 
   for (int j = 0; j < this->samples_; ++j){
@@ -356,20 +359,46 @@ void MonteCarlo::delta(const PnlMat *past, double t, PnlVect *delta, PnlVect *ic
       this->mod_->shift_asset(path_shift_up, path, i, this->h_, t, tstep);
       this->mod_->shift_asset(path_shift_down,path, i, -this->h_, t, tstep);
       LET(sum,i)=GET(sum,i)+this->opt_->payoff(path_shift_up) - this->opt_->payoff(path_shift_down);
+      LET(sumSquare,i) = GET(sumSquare,i) + SQR(this->opt_->payoff(path_shift_up) - this->opt_->payoff(path_shift_down));//GET(sum,i)*GET(sum,i);
     }
   }
+
+  double cst = exp(- 2 * (mod_->r_ * (opt_->T_ - t) ) );
 
   for (int i = 0; i < nbAsset; i++){
     if(t==0){
       LET(delta, i) = GET(sum,i) * exp(-this->mod_->r_ * (this->opt_->T_ - t)) / (2.0 * this->samples_ * MGET(path, 0, i) * this->h_);
+      LET(sumSquare, i) = GET(sumSquare, i) * exp(-2 * this->mod_->r_ * (this->opt_->T_ - t)) / (4.0 * this->samples_ * MGET(path, 0, i) * this->h_ * this->h_);
     }else{
-      LET(delta, i) = GET(sum,i) * exp(-this->mod_->r_ * (this->opt_->T_ - t)) / (2.0 * this->samples_ * MGET(past, past->m-1, i) * this->h_);  
+      LET(delta, i) = GET(sum,i) * exp(-this->mod_->r_ * (this->opt_->T_ - t)) / (2.0 * this->samples_ * MGET(past, past->m-1, i) * this->h_); 
+      LET(sumSquare, i) = GET(sumSquare, i) * exp(-2 * this->mod_->r_ * (this->opt_->T_ - t)) / (4.0 * this->samples_ * MGET(past, past->m - 1, i) * this->h_ * this->h_); 
     }
+
+    double varEstimator = cst * (GET(sumSquare, i) - (GET(delta, i) * GET(delta, i)));
+
+    LET(ic, i) = (GET(delta, i) + 1.96 * sqrt(varEstimator) / sqrt(this->samples_)) - (GET(delta, i) - 1.96 * sqrt(varEstimator) / sqrt(this->samples_));
   }
 
+  pnl_vect_free(&sumSquare);
+  pnl_vect_free(&varEstimator);
   pnl_vect_free(&sum);
   pnl_mat_free(&path);
   pnl_mat_free(&path_shift_up);
   pnl_mat_free(&path_shift_down);
 }
+
+void MonteCarlo::price_master(double* PrixTotal, double* ICTotal, int sizeComWorld){
+  *PrixTotal = *PrixTotal / (sizeComWorld);
+  *ICTotal = *ICTotal / (sizeComWorld);
+}
+
+void MonteCarlo::delta_master(PnlVect *delta, PnlVect *vic, int sizeCommWorld){
+  int size = delta->size;
+  for(int i=0; i<size; i++){
+    LET(delta,i) = GET(delta,i)/sizeCommWorld;
+    LET(vic,i) = GET(vic,i)/sizeCommWorld;
+  }
+}
+
+
  
