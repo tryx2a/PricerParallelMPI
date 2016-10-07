@@ -1,6 +1,6 @@
 #include <iostream>
 
-using namespace std;
+using namespace std;   // avoid using namespace
 
 #include "option.h"
 
