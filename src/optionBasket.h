@@ -3,7 +3,7 @@
 
 #include "option.h"
 
-class OptionBasket : public Option
+class OptionBasket : public Option   // ok public inheritance
 {
 public:
   double strike_;
